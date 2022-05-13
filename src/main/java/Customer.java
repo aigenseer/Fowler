@@ -6,8 +6,8 @@ public class Customer {
     private String name;
     private Vector rentals = new Vector();
 
-    public Customer (String newname){
-        name = newname;
+    public Customer (String name){
+        this.name = name;
     };
 
     public void addRental(Rental arg) {
@@ -19,25 +19,42 @@ public class Customer {
     };
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
         Enumeration enum_rentals = rentals.elements();
-        String result = "Rental Record for " + this.getName() + "\n";
-        result += "\t" + "Title" + "\t" + "\t" + "Days" + "\t" + "Amount" + "\n";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Rental Record for ").append(this.getName()).append("\n");
+        builder.append("\t" + "Title" + "\t" + "\t" + "Days" + "\t" + "Amount" + "\n");
 
         while (enum_rentals.hasMoreElements()) {
-            double thisAmount = 0;
             Rental rental = (Rental) enum_rentals.nextElement();
             //determine amounts for each line
-            thisAmount = rental.getCharge();
-            frequentRenterPoints += rental.getFrequentRenterPoints();
-            result += "\t" + rental.getMovie().getTitle()+ "\t" + "\t" + rental.getDaysRented() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
+            double amount = rental.getCharge();
+            builder.append("\t").append(rental.getMovie().getTitle()).append("\t").append("\t").append(rental.getDaysRented()).append("\t").append(amount).append("\n");
         }
         //add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
-        return result;
+        builder.append("Amount owed is ").append(getTotalCharge()).append("\n");
+        builder.append("You earned ").append(getTotalFrequentRenterPoints()).append(" frequent renter points");
+        return builder.toString();
+    }
+
+
+    private double getTotalCharge() {
+        double charge = 0;
+        Enumeration enum_rentals = rentals.elements();
+        while (enum_rentals.hasMoreElements()) {
+            Rental rental = (Rental) enum_rentals.nextElement();
+            charge += rental.getCharge();
+        }
+        return charge;
+    }
+
+    private int getTotalFrequentRenterPoints() {
+        int points = 0;
+        Enumeration enum_rentals = rentals.elements();
+        while (enum_rentals.hasMoreElements()) {
+            Rental rental = (Rental) enum_rentals.nextElement();
+            points += rental.getFrequentRenterPoints();
+        }
+        return points;
     }
 
 }
