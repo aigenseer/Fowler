@@ -3,8 +3,8 @@ import java.lang.*;
 import java.util.*;
 
 public class Customer {
-    private String name;
-    private Vector rentals = new Vector();
+    private final String name;
+    private final Vector<Rental> rentals = new Vector<>();
 
     public Customer (String name){
         this.name = name;
@@ -19,13 +19,13 @@ public class Customer {
     };
 
     public String statement() {
-        Enumeration enum_rentals = rentals.elements();
+        Enumeration<Rental> enum_rentals = rentals.elements();
         StringBuilder builder = new StringBuilder();
         builder.append("Rental Record for ").append(this.getName()).append("\n");
         builder.append("\t" + "Title" + "\t" + "\t" + "Days" + "\t" + "Amount" + "\n");
 
         while (enum_rentals.hasMoreElements()) {
-            Rental rental = (Rental) enum_rentals.nextElement();
+            Rental rental = enum_rentals.nextElement();
             //determine amounts for each line
             double amount = rental.getCharge();
             builder.append("\t").append(rental.getMovie().getTitle()).append("\t").append("\t").append(rental.getDaysRented()).append("\t").append(amount).append("\n");
@@ -39,9 +39,9 @@ public class Customer {
 
     private double getTotalCharge() {
         double charge = 0;
-        Enumeration enum_rentals = rentals.elements();
+        Enumeration<Rental> enum_rentals = rentals.elements();
         while (enum_rentals.hasMoreElements()) {
-            Rental rental = (Rental) enum_rentals.nextElement();
+            Rental rental = enum_rentals.nextElement();
             charge += rental.getCharge();
         }
         return charge;
@@ -49,9 +49,9 @@ public class Customer {
 
     private int getTotalFrequentRenterPoints() {
         int points = 0;
-        Enumeration enum_rentals = rentals.elements();
+        Enumeration<Rental> enum_rentals = rentals.elements();
         while (enum_rentals.hasMoreElements()) {
-            Rental rental = (Rental) enum_rentals.nextElement();
+            Rental rental = enum_rentals.nextElement();
             points += rental.getFrequentRenterPoints();
         }
         return points;
